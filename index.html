@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>阿凡其AI英语陪学陪练与等级测试（小学版）</title>
+<style>
+  :root {
+    --primary: #4F46E5;
+    --primary-light: #818CF8;
+    --accent: #F59E0B;
+    --bg: #F8FAFC;
+    --card: #FFFFFF;
+    --text: #1E293B;
+    --text-light: #64748B;
+    --radius: 14px;
+    --shadow: 0 1px 6px rgba(0,0,0,.07);
+    --shadow-lg: 0 4px 16px rgba(0,0,0,.12);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 14px;
+  }
+  .hero { text-align: left; padding: 8px 10px 10px; width: 100%; max-width: 420px; display: flex; align-items: center; gap: 16px; }
+  .hero-right { max-height: 160px; width: auto; object-fit: contain; flex-shrink: 0; }
+  .hero-text { flex: 1; }
+  .hero-avatar { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-light); box-shadow: 0 2px 10px rgba(79,70,229,.25); flex-shrink: 0; }
+  .hero h1 { font-size: 22px; font-weight: 800; color: var(--primary); line-height: 1.25; margin-bottom: 2px; }
+  .hero .sub { font-size: 14px; color: var(--primary); font-weight: 600; }
+  .hero .desc { font-size: 13px; color: var(--text-light); line-height: 1.4; margin-top: 3px; }
+  .hero .tags { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+  .features { width: 100%; max-width: 420px; margin-top: 8px; }
+  .feat { background: var(--card); border-radius: 10px; padding: 10px 14px; margin-bottom: 6px; box-shadow: var(--shadow); font-size: 12px; line-height: 1.45; color: var(--text); }
+  .feat span { font-size: 18px; margin-right: 5px; vertical-align: middle; }
+  .feat strong { font-size: 13px; color: var(--primary); }
+  .feat.guarantee { border: 2px solid var(--accent); background: #FFFBEB; }
+  .feat.guarantee strong { color: #B45309; }
+  .cards { width: 100%; max-width: 420px; margin-top: 8px; }
+  .card { background: var(--card); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; box-shadow: var(--shadow); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--text); }
+  .card:hover, .card:active { transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+  .card-icon { font-size: 36px; min-width: 44px; text-align: center; }
+  .card-info h3 { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+  .card-info p { font-size: 12px; color: var(--text-light); line-height: 1.35; }
+  .card-badge { margin-left: auto; background: var(--primary); color: #fff; font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: 20px; white-space: nowrap; }
+  .card-badge.gold { background: var(--accent); }
+  .footer { margin-top: auto; padding-top: 16px; text-align: center; font-size: 11px; color: var(--text-light); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <img class="hero-avatar" src="afanqi.png" alt="阿凡其">
+  <div class="hero-text">
+  <h1>阿凡其AI英语<br>陪学陪练与等级测试（小学版）</h1>
+  <p class="sub">用最短的时间、最省钱的方式，掌握最纯正地道的英语听说读写</p>
+  <p class="desc">——这就是阿凡其的承诺</p>
+  <p class="tags">小学1-6年级 · 智能语音 · 即时反馈 · 分级测试</p>
+  </div>
+  <img class="hero-right" src="rui.jpg" alt="锐">
+</div>
+
+<div class="features">
+  <div class="feat"><span>🤖</span><strong>AI陪学，一级一级通关</strong><br>人工智能阿凡其24小时在线，陪你从一级起步，学、练、测、考，逐级解锁。</div>
+  <div class="feat"><span>📚</span><strong>听说读写，全面突破</strong><br>听音辨词、听句选译、跟读模仿、拼写填空……14种题型覆盖英语四大核心能力。</div>
+  <div class="feat"><span>🏠</span><strong>解放父母，孩子自主</strong><br>阿凡其全程引导，发音纠正、即时反馈、智能评分，孩子自己就能学。</div>
+  <div class="feat"><span>🎯</span><strong>积分累积，一路通关</strong><br>每级达标积分持续累积，形成完整的学习成长档案。</div>
+  <div class="feat guarantee"><span>💰</span><strong>效果承诺，敢说敢退</strong><br>凡所有级别均达标者，若中考或高考英语成绩未达80分，退还所收费用。</div>
+</div>
+
+<div class="cards">
+  <a class="card" href="companion.html">
+    <div class="card-icon">📖</div>
+    <div class="card-info">
+      <h3>陪学陪练</h3>
+      <p>学新词 · 跟读练 · 小测验</p>
+    </div>
+    <span class="card-badge">推荐</span>
+  </a>
+  <a class="card" href="a1-english-final.html">
+    <div class="card-icon">📝</div>
+    <div class="card-info">
+      <h3>测试题库</h3>
+      <p>14种题型 · 全部2736题</p>
+    </div>
+    <span class="card-badge gold">全部</span>
+  </a>
+</div>
+
+<div class="footer">
+  阿凡其——不是让你刷题，是让你真正会英语。
+</div>
+
+</body>
+</html>
