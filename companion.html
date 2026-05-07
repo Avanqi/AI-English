@@ -1,0 +1,879 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>阿凡其AI英语陪学陪练与等级测试（小学版）</title>
+<style>
+/* ── Design: Playful Classroom ── */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+:root {
+  --bg: #FFF8F0;
+  --card: #FFFFFF;
+  --primary: #FF6B35;
+  --primary-light: #FFE8DD;
+  --secondary: #4ECDC4;
+  --secondary-light: #E0F7F5;
+  --accent: #FFD93D;
+  --accent-light: #FFF8DD;
+  --danger: #FF6B6B;
+  --danger-light: #FFE5E5;
+  --success: #51CF66;
+  --success-light: #E3F9E5;
+  --text: #2D3436;
+  --text-light: #636E72;
+  --shadow: 0 4px 20px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --font-en: 'Fredoka', sans-serif;
+  --font-zh: 'Noto Sans SC', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  font-family: var(--font-zh);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before, body::after {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  z-index: 0;
+  opacity: 0.15;
+}
+body::before {
+  width: 300px; height: 300px;
+  background: var(--primary);
+  top: -80px; right: -80px;
+}
+body::after {
+  width: 250px; height: 250px;
+  background: var(--secondary);
+  bottom: -60px; left: -60px;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px 16px;
+  min-height: 100vh;
+}
+
+.progress-bar { position:fixed; top:0; left:0; right:0; height:4px; background:#eee; z-index:100; }
+.progress-bar .fill { height:100%; background:linear-gradient(90deg,var(--primary),var(--secondary)); transition:width 0.5s ease; border-radius:0 4px 4px 0; }
+
+.phase-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:16px; }
+.phase-teach { background:var(--secondary-light); color:#0D9488; }
+.phase-practice { background:var(--accent-light); color:#B8860B; }
+.phase-test { background:var(--primary-light); color:var(--primary); }
+.phase-review { background:var(--danger-light); color:var(--danger); }
+
+.card { background:var(--card); border-radius:var(--radius); padding:24px 20px; box-shadow:var(--shadow); margin-bottom:16px; animation:slideUp 0.4s ease; }
+@keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+.home-title { font-family:var(--font-en); font-size:32px; font-weight:700; color:var(--primary); text-align:center; margin:30px 0 4px; }
+.home-sub { text-align:center; color:var(--text-light); font-size:15px; margin-bottom:32px; }
+.mascot { text-align:center; font-size:72px; margin:20px 0; animation:bounce 2s infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+.grade-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
+.grade-btn { background:var(--card); border:2px solid #eee; border-radius:var(--radius-sm); padding:16px 8px; text-align:center; cursor:pointer; transition:all 0.2s; font-family:var(--font-en); font-weight:600; font-size:17px; -webkit-tap-highlight-color:transparent; user-select:none; }
+.grade-btn:hover,.grade-btn:active,.grade-btn.active { border-color:var(--primary); background:var(--primary-light); color:var(--primary); transform:scale(1.05); }
+
+.mode-card { background:var(--card); border-radius:var(--radius); padding:18px; margin-bottom:12px; box-shadow:var(--shadow); cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:14px; }
+.mode-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+.mode-icon { font-size:36px; min-width:48px; text-align:center; }
+.mode-info h3 { font-size:16px; margin-bottom:3px; }
+.mode-info p { font-size:13px; color:var(--text-light); }
+
+.word-card { background:var(--card); border-radius:var(--radius); padding:28px 20px; text-align:center; box-shadow:var(--shadow-lg); margin-bottom:16px; animation:popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275); }
+@keyframes popIn { from{opacity:0;transform:scale(0.8)} to{opacity:1;transform:scale(1)} }
+.word-en { font-family:var(--font-en); font-size:36px; font-weight:700; color:var(--primary); margin-bottom:6px; }
+.word-ipa { font-size:16px; color:var(--text-light); margin-bottom:8px; font-family:var(--font-en); }
+.word-zh { font-size:20px; font-weight:600; margin-bottom:12px; }
+.word-example { font-size:14px; color:var(--text-light); line-height:1.6; background:#f8f9fa; border-radius:var(--radius-sm); padding:12px; margin-top:8px; }
+
+.play-btn { width:56px; height:56px; border-radius:50%; border:none; background:linear-gradient(135deg,var(--primary),#FF8C5A); color:white; font-size:24px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 4px 15px rgba(255,107,53,0.4); transition:all 0.2s; margin:8px 0; }
+.play-btn:hover { transform:scale(1.1); }
+.play-btn:active { transform:scale(0.95); }
+.play-btn.playing { animation:pulse 1s infinite; }
+
+.big-play-btn { width:auto; min-width:180px; height:56px; border-radius:28px; border:none; background:linear-gradient(135deg,var(--primary),#FF8C5A); color:white; font-size:20px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 4px 15px rgba(255,107,53,0.4); transition:all 0.2s; margin:12px 0; padding:0 24px; animation:pulse 2s infinite; }
+.big-play-btn:hover { transform:scale(1.05); }
+.big-play-btn:active { transform:scale(0.95); }
+@keyframes pulse { 0%,100%{box-shadow:0 4px 15px rgba(255,107,53,0.4)} 50%{box-shadow:0 4px 30px rgba(255,107,53,0.7)} }
+
+.options { display:flex; flex-direction:column; gap:10px; }
+.opt-btn { display:flex; align-items:center; gap:12px; padding:14px 16px; border-radius:var(--radius-sm); border:2px solid #eee; background:var(--card); cursor:pointer; transition:all 0.2s; font-size:15px; text-align:left; }
+.opt-btn:hover { border-color:var(--primary); background:var(--primary-light); }
+.opt-btn .opt-letter { width:28px; height:28px; border-radius:50%; background:#f0f0f0; display:flex; align-items:center; justify-content:center; font-family:var(--font-en); font-weight:700; font-size:14px; flex-shrink:0; }
+.opt-btn.correct { border-color:var(--success); background:var(--success-light); }
+.opt-btn.correct .opt-letter { background:var(--success); color:white; }
+.opt-btn.wrong { border-color:var(--danger); background:var(--danger-light); }
+.opt-btn.wrong .opt-letter { background:var(--danger); color:white; }
+.opt-btn.disabled { pointer-events:none; opacity:0.6; }
+
+.answer-input { width:100%; padding:14px 16px; border:2px solid #eee; border-radius:var(--radius-sm); font-size:18px; font-family:var(--font-en); text-align:center; outline:none; transition:border-color 0.2s; }
+.answer-input:focus { border-color:var(--primary); }
+
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:12px 24px; border-radius:var(--radius-sm); border:none; font-size:16px; font-weight:600; cursor:pointer; transition:all 0.2s; }
+.btn-primary { background:linear-gradient(135deg,var(--primary),#FF8C5A); color:white; box-shadow:0 4px 15px rgba(255,107,53,0.3); }
+.btn-primary:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(255,107,53,0.4); }
+.btn-secondary { background:var(--secondary); color:white; box-shadow:0 4px 15px rgba(78,205,196,0.3); }
+.btn-full { width:100%; }
+.btn-outline { background:transparent; border:2px solid var(--primary); color:var(--primary); border-radius:var(--radius); padding:10px 20px; font-size:14px; cursor:pointer; font-weight:600; transition:all 0.2s; }
+.btn-outline:active { transform:scale(0.97); background:var(--primary); color:white; }
+.mic-btn { background:linear-gradient(135deg,var(--primary),#e06030); color:white; border:none; border-radius:50px; font-size:15px; cursor:pointer; padding:12px 28px; box-shadow:0 4px 15px rgba(255,107,53,0.3); transition:all 0.2s; }
+.mic-btn:active { transform:scale(0.95); box-shadow:0 2px 8px rgba(255,107,53,0.4); }
+
+.feedback { text-align:center; padding:16px; border-radius:var(--radius-sm); margin-bottom:12px; font-weight:600; animation:slideUp 0.3s ease; }
+.feedback.correct { background:var(--success-light); color:#2D8A4E; }
+.feedback.wrong { background:var(--danger-light); color:#CC3333; }
+.feedback .big-emoji { font-size:40px; display:block; margin-bottom:6px; }
+
+.summary-score { font-family:var(--font-en); font-size:64px; font-weight:700; text-align:center; background:linear-gradient(135deg,var(--primary),var(--secondary)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin:16px 0; }
+.summary-detail { display:flex; justify-content:center; gap:24px; margin-bottom:20px; }
+.summary-item { text-align:center; }
+.summary-item .num { font-family:var(--font-en); font-size:28px; font-weight:700; }
+.summary-item .label { font-size:12px; color:var(--text-light); }
+
+.step-dots { display:flex; justify-content:center; gap:8px; margin:12px 0; }
+.step-dot { width:10px; height:10px; border-radius:50%; background:#ddd; transition:all 0.3s; }
+.step-dot.done { background:var(--success); }
+.step-dot.current { background:var(--primary); transform:scale(1.3); }
+
+.nav-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.nav-back { width:36px; height:36px; border-radius:50%; border:none; background:var(--card); box-shadow:var(--shadow); cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; }
+.nav-title { font-weight:600; font-size:16px; }
+
+.hint { background:var(--accent-light); border-radius:var(--radius-sm); padding:10px 14px; font-size:13px; color:#B8860B; margin-top:8px; }
+
+.speak-indicator { display:flex; align-items:center; justify-content:center; gap:3px; height:30px; margin:8px 0; }
+.speak-indicator .bar { width:4px; height:12px; background:var(--primary); border-radius:2px; animation:wave 0.8s ease-in-out infinite; }
+.speak-indicator .bar:nth-child(2) { animation-delay:0.1s; }
+.speak-indicator .bar:nth-child(3) { animation-delay:0.2s; }
+.speak-indicator .bar:nth-child(4) { animation-delay:0.3s; }
+.speak-indicator .bar:nth-child(5) { animation-delay:0.15s; }
+@keyframes wave { 0%,100%{height:8px} 50%{height:22px} }
+
+.screen { display:none; }
+.screen.active { display:block; }
+
+.review-item { display:flex; align-items:center; gap:10px; padding:12px; border-radius:var(--radius-sm); margin-bottom:8px; background:var(--card); box-shadow:0 2px 8px rgba(0,0,0,0.04); }
+.review-item .ri-status { font-size:20px; }
+.review-item .ri-word { font-family:var(--font-en); font-weight:600; font-size:16px; }
+.review-item .ri-meaning { font-size:13px; color:var(--text-light); margin-left:auto; }
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="fill" id="progressFill" style="width:0%"></div></div>
+
+<div class="app">
+
+<!-- HOME SCREEN -->
+<div class="screen active" id="screenHome">
+  <div class="mascot">🤖</div>
+  <h1 class="home-title">AI英语陪学陪练</h1>
+  <p class="home-sub">AI英语陪练 · 边学边玩</p>
+  <div class="card">
+    <p style="font-weight:600; margin-bottom:10px;">📚 选择年级</p>
+    <div class="grade-grid" id="gradeGrid">
+      <div class="grade-btn" data-g="G1" onclick="pickGrade(this,'G1')">一年级</div>
+      <div class="grade-btn" data-g="G2" onclick="pickGrade(this,'G2')">二年级</div>
+      <div class="grade-btn" data-g="G3" onclick="pickGrade(this,'G3')">三年级</div>
+      <div class="grade-btn active" data-g="G4" onclick="pickGrade(this,'G4')">四年级</div>
+      <div class="grade-btn" data-g="G5" onclick="pickGrade(this,'G5')">五年级</div>
+      <div class="grade-btn" data-g="G6" onclick="pickGrade(this,'G6')">六年级</div>
+    </div>
+  </div>
+  <div class="mode-card" onclick="startMode('learn')">
+    <div class="mode-icon">📖</div>
+    <div class="mode-info"><h3>学新词</h3><p>先教5个新词，再练再测</p></div>
+  </div>
+  <div class="mode-card" onclick="startMode('practice')">
+    <div class="mode-icon">🎯</div>
+    <div class="mode-info"><h3>练一练</h3><p>随机题型，即时反馈</p></div>
+  </div>
+  <div class="mode-card" onclick="startMode('test')">
+    <div class="mode-icon">📝</div>
+    <div class="mode-info"><h3>小测验</h3><p>限时挑战，看你能拿几分</p></div>
+  </div>
+  <div class="card" style="margin-top:20px;">
+    <p style="font-weight:700; margin-bottom:10px; color:var(--primary);">💎 单级解锁</p>
+    <p style="font-size:13px; color:var(--text-light); margin-bottom:10px;">9.9元/年级，买断该年级无限练</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+      <button class="btn btn-secondary" onclick="event.stopPropagation();alert('请私信客服购买：年级+微信支付')" style="font-size:13px; padding:8px;">G1</button>
+      <button class="btn btn-secondary" onclick="event.stopPropagation();alert('请私信客服购买：年级+微信支付')" style="font-size:13px; padding:8px;">G2</button>
+      <button class="btn btn-secondary" onclick="event.stopPropagation();alert('请私信客服购买：年级+微信支付')" style="font-size:13px; padding:8px;">G3</button>
+      <button class="btn btn-secondary" onclick="event.stopPropagation();alert('请私信客服购买：年级+微信支付')" style="font-size:13px; padding:8px;">G4</button>
+      <button class="btn btn-secondary" onclick="event.stopPropagation();alert('请私信客服购买：年级+微信支付')" style="font-size:13px; padding:8px;">G5</button>
+      <button class="btn btn-secondary" onclick="event.stopPropagation();alert('请私信客服购买：年级+微信支付')" style="font-size:13px; padding:8px;">G6</button>
+    </div>
+  </div>
+</div>
+
+<!-- TEACH SCREEN -->
+<div class="screen" id="screenTeach">
+  <div class="nav-top">
+    <button class="nav-back" onclick="goHome()">←</button>
+    <span class="nav-title">学新词</span>
+    <span></span>
+  </div>
+  <div class="phase-badge phase-teach">📖 教你学</div>
+  <div class="step-dots" id="teachDots"></div>
+  <div id="teachContent"></div>
+  <div style="text-align:center; margin-top:12px;">
+    <button class="btn btn-primary" id="teachNextBtn" onclick="teachNext()">下一个 →</button>
+  </div>
+</div>
+
+<!-- PRACTICE SCREEN -->
+<div class="screen" id="screenPractice">
+  <div class="nav-top">
+    <button class="nav-back" onclick="goHome()">←</button>
+    <span class="nav-title" id="practiceTitle">练一练</span>
+    <span id="practiceCount" style="font-family:var(--font-en); font-weight:600;"></span>
+  </div>
+  <div class="phase-badge phase-practice" id="practiceBadge">🎯 练一练</div>
+  <div id="practiceHint" style="text-align:center; background:#FFF3E0; color:#E65100; font-size:14px; padding:8px 16px; border-radius:12px; margin:0 16px 8px;">
+    🔊 先听完两遍发音，再选答案提交！
+  </div>
+  <div id="practiceContent"></div>
+</div>
+
+<!-- SUMMARY SCREEN -->
+<div class="screen" id="screenSummary">
+  <div class="mascot">🎉</div>
+  <h2 style="text-align:center; font-size:22px; margin-bottom:4px;">练习完成！</h2>
+  <div class="summary-score" id="summaryScore">0%</div>
+  <div class="summary-detail">
+    <div class="summary-item"><div class="num" style="color:var(--success);" id="summaryCorrect">0</div><div class="label">答对</div></div>
+    <div class="summary-item"><div class="num" style="color:var(--danger);" id="summaryWrong">0</div><div class="label">答错</div></div>
+    <div class="summary-item"><div class="num" style="color:var(--text-light);" id="summarySkip">0</div><div class="label">跳过</div></div>
+  </div>
+  <div id="reviewList"></div>
+  <div style="margin-top:16px; display:flex; gap:10px;">
+    <button class="btn btn-secondary btn-full" onclick="reviewMistakes()">复习错题</button>
+    <button class="btn btn-primary btn-full" onclick="goHome()">返回首页</button>
+  </div>
+</div>
+
+</div><!-- .app -->
+
+<script>
+// ── 加载题库（兼容微信浏览器）──
+(function loadQBANK() {
+  var el = document.createElement('script');
+  el.src = 'qbank.min.js?v=2026050501';
+  el.onload = function() {
+    window.__qbankLoaded = true;
+    console.log('QBANK loaded OK, keys:', Object.keys(QBANK || {}));
+  };
+  el.onerror = function(e) {
+    window.__qbankError = 'script.onerror: ' + String(e);
+    console.error('qbank.js script onerror:', e);
+  };
+  document.head.appendChild(el);
+})();
+</script>
+<script>
+setTimeout(function() {
+  if (typeof QBANK === 'undefined') {
+    var reason = window.__qbankError || 'script loaded but QBANK not defined (possible JS syntax error in qbank.js)';
+    document.body.innerHTML = '<div style="padding:30px;font-size:16px;line-height:2;color:#c00;">'
+      + '<b>⚠ 题库加载失败</b><br><br>'
+      + '原因：' + reason + '<br><br>'
+      + '请尝试：<br>1. 清除微信缓存后重新打开<br>2. 确认手机和电脑在同一WiFi<br>3. 在手机浏览器（非微信）中打开此页面<br><br>'
+      + '<button onclick="location.reload()" style="padding:12px 24px;font-size:16px;cursor:pointer;">🔄 刷新页面</button>'
+      + '</div>';
+  }
+}, 3000);
+</script>
+
+<script>
+// ══════════════════════════════════════
+// AI英语陪学陪练 — Main Application Logic
+// ══════════════════════════════════════
+
+var selectedGrade = 'G4';
+var currentMode = 'learn';
+var teachQuestions = [];
+var teachIndex = 0;
+var practiceQuestions = [];
+var practiceIndex = 0;
+var correctCount = 0;
+var wrongCount = 0;
+var skipCount = 0;
+var mistakes = [];
+var isSpeaking = false;
+var currentQ = null;
+var answered = false;
+var testTimer = null;
+var testSeconds = 0;
+
+// 自动适配当前域名，支持局域网和外网访问
+var _base = location.protocol + '//' + location.host;
+var TTS_EN = _base + '/stream/en-US-AriaNeural/';
+var TTS_ZH = _base + '/stream/zh-CN-YunxiaNeural/';
+
+// ── Utility ──
+function shuffle(arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+  return arr;
+}
+
+function pickGrade(el, g) {
+  selectedGrade = g;
+  var btns = document.querySelectorAll('.grade-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+  el.classList.add('active');
+}
+
+function showScreen(id) {
+  var screens = document.querySelectorAll('.screen');
+  for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
+  document.getElementById(id).classList.add('active');
+}
+
+function goHome() {
+  if (testTimer) { clearInterval(testTimer); testTimer = null; }
+  showScreen('screenHome');
+}
+
+// ── TTS / Audio ──
+function speakEn(text, cb) {
+  playAudioUrl(TTS_EN + encodeURIComponent(text), cb);
+}
+
+function speakZh(text, cb) {
+  playAudioUrl(TTS_ZH + encodeURIComponent(text), cb);
+}
+
+function playAudioUrl(url, cb) {
+  if (isSpeaking) return;
+  isSpeaking = true;
+  fetch(url).then(function(r) { return r.blob(); }).then(function(blob) {
+    var u = URL.createObjectURL(blob);
+    var a = new Audio(u);
+    a.onended = function() { isSpeaking = false; URL.revokeObjectURL(u); if (cb) cb(); };
+    a.onerror = function() { isSpeaking = false; URL.revokeObjectURL(u); if (cb) cb(); };
+    a.play().catch(function() { isSpeaking = false; if (cb) cb(); });
+  }).catch(function() { isSpeaking = false; if (cb) cb(); });
+}
+
+function autoPlayQuestion(q) {
+  if (q.type === 'listen_word' || q.type === 'listen_write') {
+    speakEn(q.word || q.stem || '');
+  } else if (q.type === 'listen_sent') {
+    speakEn(q.stem || '');
+  } else if (q.type === 'interact_dialog') {
+    speakEn(q.prompt || '');
+  } else if (q.type === 'interact_repeat') {
+    speakEn(q.content || q.ans || '');
+  } else if (q.type === 'speak_read' || q.type === 'speak_listen') {
+    speakEn(q.word || q.q || q.ref || '');
+  } else if (q.type === 'speak_look') {
+    speakEn(q.prompt || '');
+  }
+}
+
+// ── Collect Questions ──
+function collectByType(type, n) {
+  var grade = QBANK[selectedGrade] || {};
+  var pool = grade[type] || [];
+  shuffle(pool);
+  return pool.slice(0, n);
+}
+
+function collectMixed(n) {
+  var grade = QBANK[selectedGrade] || {};
+  var preferred = ['listen_word','listen_sent','interact_dialog','write_answer','write_blank'];
+  var pool = [];
+  for (var mod in grade) {
+    var items = grade[mod];
+    for (var j = 0; j < items.length; j++) {
+      if (preferred.includes(items[j].type)) pool.push(items[j]);
+    }
+  }
+  shuffle(pool);
+  return pool.slice(0, n);
+}
+
+// ── Start Mode ──
+function startMode(mode) {
+  if (typeof QBANK === 'undefined') {
+    alert('题库加载失败，请刷新页面重试');
+    return;
+  }
+  currentMode = mode;
+  correctCount = 0; wrongCount = 0; skipCount = 0; mistakes = [];
+  practiceIndex = 0; teachIndex = 0; answered = false;
+
+  if (mode === 'learn') {
+    teachQuestions = collectByType('listen_word', 5);
+    if (teachQuestions.length === 0) { alert('该年级暂无词汇'); return; }
+    showScreen('screenTeach');
+    renderTeachStep();
+  } else if (mode === 'practice') {
+    practiceQuestions = collectMixed(8);
+    if (practiceQuestions.length === 0) { alert('该年级暂无题目'); return; }
+    document.getElementById('practiceTitle').textContent = '练一练';
+    document.getElementById('practiceBadge').textContent = '🎯 练一练';
+    document.getElementById('practiceBadge').className = 'phase-badge phase-practice';
+    showScreen('screenPractice');
+    renderPracticeQuestion();
+  } else if (mode === 'test') {
+    practiceQuestions = collectMixed(10);
+    if (practiceQuestions.length === 0) { alert('该年级暂无题目'); return; }
+    document.getElementById('practiceTitle').textContent = '小测验';
+    document.getElementById('practiceBadge').textContent = '📝 小测验';
+    document.getElementById('practiceBadge').className = 'phase-badge phase-test';
+    testSeconds = 0;
+    if (testTimer) clearInterval(testTimer);
+    testTimer = setInterval(function() { testSeconds++; }, 1000);
+    showScreen('screenPractice');
+    renderPracticeQuestion();
+  }
+}
+
+// ── Teach (Learn Mode) ──
+function renderTeachStep() {
+  var q = teachQuestions[teachIndex];
+  currentQ = q;
+  var dots = '';
+  for (var i = 0; i < teachQuestions.length; i++) {
+    var cls = i < teachIndex ? 'done' : (i === teachIndex ? 'current' : '');
+    dots += '<div class="step-dot ' + cls + '"></div>';
+  }
+  document.getElementById('teachDots').innerHTML = dots;
+
+  var html = '<div class="word-card">';
+  html += '<div class="word-en">' + esc(q.word || q.stem || '') + '</div>';
+  if (q.ipa) html += '<div class="word-ipa">' + esc(q.ipa) + '</div>';
+  // Show Chinese meaning from opts or ans
+  var zhMeaning = '';
+  if (q.opts) {
+    var ansIdx = (q.ans || 'A').charCodeAt(0) - 65;
+    if (q.opts[ansIdx]) zhMeaning = q.opts[ansIdx];
+  }
+  if (zhMeaning) html += '<div class="word-zh">' + esc(zhMeaning) + '</div>';
+  html += '<button class="play-btn" onclick="speakEn(\'' + escJs(q.word || q.stem || '') + '\')">🔊</button>';
+  html += '</div>';
+  document.getElementById('teachContent').innerHTML = html;
+
+  // Auto play pronunciation
+  setTimeout(function() { speakEn(q.word || q.stem || ''); }, 400);
+
+  var btn = document.getElementById('teachNextBtn');
+  if (teachIndex >= teachQuestions.length - 1) {
+    btn.textContent = '开始练习 →';
+    btn.onclick = function() { startMode('practice'); };
+  } else {
+    btn.textContent = '下一个 →';
+    btn.onclick = teachNext;
+  }
+}
+
+function teachNext() {
+  teachIndex++;
+  if (teachIndex >= teachQuestions.length) {
+    startMode('practice');
+  } else {
+    renderTeachStep();
+  }
+}
+
+// ── Practice / Test Question Rendering ──
+function renderPracticeQuestion() {
+  if (practiceIndex >= practiceQuestions.length) {
+    showSummary();
+    return;
+  }
+  answered = false;
+  var q = practiceQuestions[practiceIndex];
+  currentQ = q;
+
+  // Update progress
+  var pct = Math.round((practiceIndex / practiceQuestions.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('practiceCount').textContent = (practiceIndex + 1) + '/' + practiceQuestions.length;
+
+  var html = '';
+  switch (q.type) {
+    case 'listen_word': html = renderListenWord(q); break;
+    case 'listen_sent': html = renderListenSent(q); break;
+    case 'listen_write': html = renderListenWrite(q); break;
+    case 'interact_dialog': html = renderInteractDialog(q); break;
+    case 'interact_repeat': html = renderInteractRepeat(q); break;
+    case 'write_answer': html = renderWriteAnswer(q); break;
+    case 'write_blank': html = renderWriteBlank(q); break;
+    case 'speak_read': html = renderSpeakRead(q); break;
+    case 'speak_look': html = renderSpeakLook(q); break;
+    case 'speak_listen': html = renderSpeakListen(q); break;
+    default: html = renderGeneric(q); break;
+  }
+
+  document.getElementById('practiceContent').innerHTML = html;
+
+  // Auto play audio for listening types
+  setTimeout(function() { autoPlayQuestion(q); }, 300);
+}
+
+// ── Question Renderers ──
+function renderListenWord(q) {
+  var html = '<div class="card">';
+  html += '<div class="phase-badge phase-teach">🔊 听音选词</div>';
+  html += '<div style="text-align:center; margin:16px 0;">';
+  html += '<button class="big-play-btn" onclick="speakEn(\'' + escJs(q.word || q.stem || '') + '\')">🔊 再听一遍</button>';
+  html += '</div>';
+  html += '<div class="options">';
+  var letters = ['A','B','C','D'];
+  for (var i = 0; i < q.opts.length; i++) {
+    html += '<div class="opt-btn" data-idx="' + i + '" onclick="selectOption(this,' + i + ')">';
+    html += '<span class="opt-letter">' + letters[i] + '</span>';
+    html += '<span>' + esc(q.opts[i]) + '</span>';
+    html += '</div>';
+  }
+  html += '</div></div>';
+  html += '<div style="text-align:center; margin-top:12px;">';
+  html += '<button class="btn btn-primary" id="submitBtn" onclick="checkAnswer()">提交答案</button>';
+  html += '</div>';
+  return html;
+}
+
+function renderListenSent(q) {
+  var html = '<div class="card">';
+  html += '<div class="phase-badge phase-teach">🔊 听句选译</div>';
+  html += '<div style="text-align:center; margin:16px 0;">';
+  html += '<button class="big-play-btn" onclick="speakEn(\'' + escJs(q.stem || '') + '\')">🔊 再听一遍</button>';
+  html += '</div>';
+  html += '<div class="options">';
+  var letters = ['A','B','C','D'];
+  for (var i = 0; i < q.opts.length; i++) {
+    html += '<div class="opt-btn" data-idx="' + i + '" onclick="selectOption(this,' + i + ')">';
+    html += '<span class="opt-letter">' + letters[i] + '</span>';
+    html += '<span>' + esc(q.opts[i]) + '</span>';
+    html += '</div>';
+  }
+  html += '</div></div>';
+  html += '<div style="text-align:center; margin-top:12px;">';
+  html += '<button class="btn btn-primary" id="submitBtn" onclick="checkAnswer()">提交答案</button>';
+  html += '</div>';
+  return html;
+}
+
+function renderListenWrite(q) {
+  var html = '<div class="card">';
+  html += '<div class="phase-badge phase-teach">🔊 听写</div>';
+  html += '<div style="text-align:center; margin:16px 0;">';
+  html += '<button class="big-play-btn" onclick="speakEn(\'' + escJs(q.stem || '') + '\')">🔊 再听一遍</button>';
+  html += '</div>';
+  if (q.zh) html += '<p style="text-align:center; color:var(--text-light); margin-bottom:12px;">提示：' + esc(q.zh) + '</p>';
+  html += '<input class="answer-input" id="answerInput" placeholder="输入你听到的英文..." onkeydown="if(event.key===\'Enter\')checkAnswer()">';
+  html += '</div>';
+  html += '<div style="text-align:center; margin-top:12px;">';
+  html += '<button class="btn btn-primary" id="submitBtn" onclick="checkAnswer()">提交答案</button>';
+  html += '</div>';
+  return html;
+}
+
+function renderInteractDialog(q) {
+  var html = '<div class="card">';
+  html += '<div class="phase-badge phase-teach">💬 情景对话</div>';
+  html += '<div style="text-align:center; margin:16px 0;">';
+  html += '<button class="big-play-btn" onclick="speakEn(\'' + escJs(q.prompt || '') + '\')">🔊 听问题</button>';
+  html += '</div>';
+  html += '<p style="text-align:center; font-size:18px; font-weight:600; margin-bottom:16px;">' + esc(q.prompt || '') + '</p>';
+  html += '<div class="options">';
+  var letters = ['A','B','C','D'];
+  for (var i = 0; i < q.opts.length; i++) {
+    html += '<div class="opt-btn" data-idx="' + i + '" onclick="selectOption(this,' + i + ')">';
+    html += '<span class="opt-letter">' + letters[i] + '</span>';
+    html += '<span>' + esc(q.opts[i]) + '</span>';
+    html += '</div>';
+  }
+  html += '</div></div>';
+  html += '<div style="text-align:center; margin-top:12px;">';
+  html += '<button class="btn btn-primary" id="submitBtn" onclick="checkAnswer()">提交答案</button>';
+  html += '</div>';
+  return html;
+}
+
+function renderInteractRepeat(q) {
+  var html = '<div class="card">';
+  html += '<div class="phase-badge phase-teach">🗣️ 跟读</div>';
+  html += '<div style="text-align:center; margin:16px 0;">';
+  html += '<button class="big-play-btn" onclick="speakEn(\'' + escJs(q.content || q.ans || '') + '\')">🔊 听发音</button>';
+  html += '</div>';
+  html += '<p style="text-align:center; font-size:24px; font-weight:700; font-family:var(--font-en); margin:12px 0;">' + esc(q.content || q.ans || '') + '</p>';
+  html += '<div style="text-align:center; margin:12px 0;">';
+  html += '<button class="mic-btn" onclick="alert(\'录音功能开发中\')">🎤 跟读</button>';
+  html += '</div>';
+  html += '</div>';
+  html += '<div style="text-align:center; margin-top:12px;">';
+  html += '<button class="btn btn-primary" onclick="nextQuestion()">下一题 →</button>';
+  html += '</div>';
+  return html;
+}
+
+function renderWriteAnswer(q) {
+  var html = '<div class="card">';
+  html += '<div class="phase-badge phase-practice">✍️ 看题写答</div>';
+  if (q.question) html += '<p style="font-size:16px; margin-bottom:12px;">' + esc(q.question) + '</p>';
+  if (q.q) html += '<p style="font-size:16px; margin-bottom:12px;">' + esc(q.q) + '</p>';
+  html += '<input class="answer-input" id="answerInput" placeholder="输入你的答案..." onkeydown="if(event.key===\'Enter\')checkAnswer()">';
+  html += '</div>';
+  html += '<div style="text-align:center; margin-top:12px;">';
+  html += '<button class="btn btn-primary" id="submitBtn" onclick="checkAnswer()">提交答案</button>';
+  html += '</div>';
+  return html;
+}
+
+function renderWriteBlank(q) {
+  var html = '<div class="card">';
+  html += '<div class="phase-badge phase-practice">✍️ 填空</div>';
+  html += '<p style="font-size:16px; margin-bottom:12px;">' + esc(q.stem || '') + '</p>';
+  html += '<input class="answer-input" id="answerInput" placeholder="填入正确答案..." onkeydown="if(event.key===\'Enter\')checkAnswer()">';
+  html += '</div>';
+  html += '<div style="text-align:center; margin-top:12px;">';
+  html += '<button class="btn btn-primary" id="submitBtn" onclick="checkAnswer()">提交答案</button>';
+  html += '</div>';
+  return html;
+}
+
+function renderSpeakRead(q) {
+  var html = '<div class="card">';
+  html += '<div class="phase-badge phase-practice">🗣️ 朗读</div>';
+  html += '<p style="text-align:center; font-size:24px; font-weight:700; font-family:var(--font-en); margin:12px 0;">' + esc(q.word || '') + '</p>';
+  html += '<div style="text-align:center; margin:12px 0;">';
+  html += '<button class="play-btn" onclick="speakEn(\'' + escJs(q.word || '') + '\')">🔊</button>';
+  html += '<button class="mic-btn" onclick="alert(\'录音功能开发中\')">🎤 跟读</button>';
+  html += '</div>';
+  html += '</div>';
+  html += '<div style="text-align:center; margin-top:12px;">';
+  html += '<button class="btn btn-primary" onclick="nextQuestion()">下一题 →</button>';
+  html += '</div>';
+  return html;
+}
+
+function renderSpeakLook(q) {
+  var html = '<div class="card">';
+  html += '<div class="phase-badge phase-practice">🗣️ 看图说话</div>';
+  html += '<p style="text-align:center; font-size:18px; font-weight:600; margin:12px 0;">' + esc(q.prompt || '') + '</p>';
+  html += '<div style="text-align:center; margin:12px 0;">';
+  html += '<button class="mic-btn" onclick="alert(\'录音功能开发中\')">🎤 录音</button>';
+  html += '</div>';
+  html += '<p style="text-align:center; color:var(--text-light); font-size:13px;">参考：' + esc(q.ref || '') + '</p>';
+  html += '</div>';
+  html += '<div style="text-align:center; margin-top:12px;">';
+  html += '<button class="btn btn-primary" onclick="nextQuestion()">下一题 →</button>';
+  html += '</div>';
+  return html;
+}
+
+function renderSpeakListen(q) {
+  var html = '<div class="card">';
+  html += '<div class="phase-badge phase-practice">🗣️ 听后说</div>';
+  html += '<div style="text-align:center; margin:16px 0;">';
+  html += '<button class="big-play-btn" onclick="speakEn(\'' + escJs(q.q || q.ref || '') + '\')">🔊 听发音</button>';
+  html += '</div>';
+  html += '<div style="text-align:center; margin:12px 0;">';
+  html += '<button class="mic-btn" onclick="alert(\'录音功能开发中\')">🎤 跟读</button>';
+  html += '</div>';
+  html += '<p style="text-align:center; color:var(--text-light); font-size:13px;">参考：' + esc(q.ref || '') + '</p>';
+  html += '</div>';
+  html += '<div style="text-align:center; margin-top:12px;">';
+  html += '<button class="btn btn-primary" onclick="nextQuestion()">下一题 →</button>';
+  html += '</div>';
+  return html;
+}
+
+function renderGeneric(q) {
+  var html = '<div class="card">';
+  html += '<div class="phase-badge phase-practice">' + esc(q.type) + '</div>';
+  html += '<p style="text-align:center; margin:12px 0;">' + esc(q.stem || q.prompt || q.word || '') + '</p>';
+  if (q.opts) {
+    html += '<div class="options">';
+    var letters = ['A','B','C','D'];
+    for (var i = 0; i < q.opts.length; i++) {
+      html += '<div class="opt-btn" data-idx="' + i + '" onclick="selectOption(this,' + i + ')">';
+      html += '<span class="opt-letter">' + letters[i] + '</span>';
+      html += '<span>' + esc(q.opts[i]) + '</span>';
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+  html += '<div style="text-align:center; margin-top:12px;">';
+  html += '<button class="btn btn-primary" id="submitBtn" onclick="checkAnswer()">提交答案</button>';
+  html += '</div>';
+  return html;
+}
+
+// ── Option Selection ──
+var selectedIdx = -1;
+function selectOption(el, idx) {
+  if (answered) return;
+  var btns = document.querySelectorAll('.opt-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].style.borderColor = '#eee';
+  el.style.borderColor = 'var(--primary)';
+  el.style.background = 'var(--primary-light)';
+  selectedIdx = idx;
+}
+
+// ── Check Answer ──
+function checkAnswer() {
+  if (answered) return;
+  var q = currentQ;
+  if (!q) return;
+  answered = true;
+
+  var isCorrect = false;
+  var correctAns = q.ans || '';
+  var userAns = '';
+
+  if (q.opts) {
+    // Choice type
+    if (selectedIdx < 0) {
+      // No selection — skip
+      skipCount++;
+      mistakes.push(q);
+      showFeedback(false, '未作答', correctAns);
+      return;
+    }
+    var letters = ['A','B','C','D'];
+    userAns = letters[selectedIdx];
+    isCorrect = (userAns === correctAns.toUpperCase());
+    // Highlight correct/wrong
+    var correctIdx = correctAns.toUpperCase().charCodeAt(0) - 65;
+    var btns = document.querySelectorAll('.opt-btn');
+    for (var i = 0; i < btns.length; i++) btns[i].classList.add('disabled');
+    if (correctIdx >= 0 && correctIdx < btns.length) btns[correctIdx].classList.add('correct');
+    if (!isCorrect && selectedIdx < btns.length) btns[selectedIdx].classList.add('wrong');
+  } else {
+    // Input type
+    var inp = document.getElementById('answerInput');
+    userAns = inp ? inp.value.trim() : '';
+    if (!userAns) {
+      skipCount++;
+      mistakes.push(q);
+      showFeedback(false, '未作答', correctAns);
+      return;
+    }
+    isCorrect = (userAns.toLowerCase() === correctAns.toLowerCase());
+    if (inp) {
+      inp.style.borderColor = isCorrect ? 'var(--success)' : 'var(--danger)';
+      inp.disabled = true;
+    }
+  }
+
+  if (isCorrect) {
+    correctCount++;
+    showFeedback(true);
+  } else {
+    wrongCount++;
+    mistakes.push(q);
+    showFeedback(false, userAns, correctAns);
+  }
+
+  // Hide submit, show next
+  var sub = document.getElementById('submitBtn');
+  if (sub) {
+    sub.textContent = '下一题 →';
+    sub.onclick = nextQuestion;
+  }
+}
+
+function showFeedback(correct, userAns, correctAns) {
+  var el = document.getElementById('practiceContent');
+  var fb = document.createElement('div');
+  fb.className = 'feedback ' + (correct ? 'correct' : 'wrong');
+  if (correct) {
+    fb.innerHTML = '<span class="big-emoji">🎉</span>回答正确！';
+  } else {
+    var msg = '<span class="big-emoji">😅</span>答错啦';
+    if (correctAns) msg += '<br>正确答案：<strong>' + esc(correctAns) + '</strong>';
+    fb.innerHTML = msg;
+  }
+  el.insertBefore(fb, el.firstChild);
+}
+
+function nextQuestion() {
+  practiceIndex++;
+  selectedIdx = -1;
+  renderPracticeQuestion();
+}
+
+// ── Summary ──
+function showSummary() {
+  if (testTimer) { clearInterval(testTimer); testTimer = null; }
+  document.getElementById('progressFill').style.width = '100%';
+
+  var total = correctCount + wrongCount + skipCount;
+  var pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+  document.getElementById('summaryScore').textContent = pct + '%';
+  document.getElementById('summaryCorrect').textContent = correctCount;
+  document.getElementById('summaryWrong').textContent = wrongCount;
+  document.getElementById('summarySkip').textContent = skipCount;
+
+  var html = '';
+  for (var i = 0; i < mistakes.length; i++) {
+    var q = mistakes[i];
+    var word = q.word || q.stem || q.prompt || q.content || '';
+    var meaning = '';
+    if (q.opts) {
+      var ansIdx = (q.ans || 'A').charCodeAt(0) - 65;
+      if (q.opts[ansIdx]) meaning = q.opts[ansIdx];
+    } else {
+      meaning = q.ans || '';
+    }
+    html += '<div class="review-item">';
+    html += '<span class="ri-status">❌</span>';
+    html += '<span class="ri-word">' + esc(word) + '</span>';
+    html += '<span class="ri-meaning">' + esc(meaning) + '</span>';
+    html += '</div>';
+  }
+  document.getElementById('reviewList').innerHTML = html;
+  showScreen('screenSummary');
+}
+
+function reviewMistakes() {
+  if (mistakes.length === 0) { alert('没有错题'); return; }
+  practiceQuestions = mistakes.slice();
+  practiceIndex = 0;
+  correctCount = 0; wrongCount = 0; skipCount = 0; mistakes = [];
+  document.getElementById('practiceTitle').textContent = '错题复习';
+  document.getElementById('practiceBadge').textContent = '🔄 错题复习';
+  document.getElementById('practiceBadge').className = 'phase-badge phase-review';
+  showScreen('screenPractice');
+  renderPracticeQuestion();
+}
+
+// ── Escape Helpers ──
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function escJs(s) {
+  if (!s) return '';
+  return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\n/g,'\\n');
+}
+</script>
+
+</body>
+</html>
